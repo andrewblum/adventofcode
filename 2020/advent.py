@@ -149,3 +149,28 @@
 #     total += len([a for a in count.values() if a == len(group)])
 # print(total)
 
+# day 7 
+
+file = open('advent_input.txt')
+graph = {}
+for line in file.readlines():
+    bag, contents = line.split('contain')
+    bag = bag[:-6]
+    for content in contents.split(','): 
+        inner_bag = ' '.join(content.strip()[2:].split()[:2])
+        v = graph.get(inner_bag, set())
+        v.add(bag)
+        graph[inner_bag] = v
+
+total = 0
+seen = set()
+q = graph['shiny gold']
+while q: 
+    cur = q.pop()
+    if cur not in seen:
+        seen.add(cur)
+        total += 1
+        if cur in graph:
+            q = q.union(graph[cur])
+print(total)
+
