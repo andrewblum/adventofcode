@@ -139,17 +139,13 @@
 
 
 # file = open('advent_input.txt')
-# lines = file.readlines()
-# group = {}
-# total, people = 0, 0
-# for i, line in enumerate(lines): 
-#     line = line.strip()
-#     if line != '':
-#         people += 1
-#         for answer in line:
-#             group[answer] = group.get(answer, 0) + 1
-#     if line == '' or i == len(lines)-1:
-#         total += len([a for a in group.values() if a == people])
-#         people = 0
-#         group = {}
+# groups = [group.split('\n') for group in file.read().split('\n\n')]
+# total = 0
+# for group in groups: 
+#     count = {}
+#     for person in group: 
+#         for answer in person:
+#             count[answer] = count.get(answer, 0) + 1
+#     total += len([a for a in count.values() if a == len(group)])
 # print(total)
+
