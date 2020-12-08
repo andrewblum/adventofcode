@@ -138,3 +138,18 @@
 # day 6 
 
 
+# file = open('advent_input.txt')
+# lines = file.readlines()
+# group = {}
+# total, people = 0, 0
+# for i, line in enumerate(lines): 
+#     line = line.strip()
+#     if line != '':
+#         people += 1
+#         for answer in line:
+#             group[answer] = group.get(answer, 0) + 1
+#     if line == '' or i == len(lines)-1:
+#         total += len([a for a in group.values() if a == people])
+#         people = 0
+#         group = {}
+# print(total)
