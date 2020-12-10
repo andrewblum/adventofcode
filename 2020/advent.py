@@ -41,10 +41,7 @@
 
 # file = open('advent_input.txt')
 # lines = file.readlines()
-# grid = []
-# for line in lines: 
-#     line = list(line.strip())
-#     grid.append(line)
+# grid = [list(line.strip()) for line in lines]
 
 # def walk(rstep, cstep, grid):
 #     tree_count, row, col = 0, 0, 0
@@ -192,3 +189,30 @@
 #     return sum([(child[1] * walk(child)) + child[1] for child in graph[node[0]]])
 
 # print(walk(('shiny gold', 1))) 
+
+
+# day 8 
+
+file = open('advent_input.txt')
+lines = [l.strip() for l in file.readlines()]
+
+def run(cur, acum, seen, can_change):
+    while cur not in seen and cur < len(lines): 
+        seen.add(cur)
+        cmd, arg = lines[cur][:3], int(lines[cur][4:])
+        if cmd == 'acc':
+            acum += arg
+        if cmd == 'jmp':
+            if can_change:
+                run(cur + 1, acum, seen.copy(), False)
+            cur += arg
+        else:
+            if cmd == 'nop' and can_change:
+                run(cur + arg, acum, seen.copy(), False)
+            cur += 1
+    if cur == len(lines):
+        print(acum)
+
+seen = set()
+run(0, 0, seen, True)
+
