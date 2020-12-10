@@ -193,26 +193,62 @@
 
 # day 8 
 
+# file = open('advent_input.txt')
+# lines = [l.strip() for l in file.readlines()]
+
+# def run(cur, acum, seen, can_change):
+#     while cur not in seen and cur < len(lines): 
+#         seen.add(cur)
+#         cmd, arg = lines[cur][:3], int(lines[cur][4:])
+#         if cmd == 'acc':
+#             acum += arg
+#         if cmd == 'jmp':
+#             if can_change:
+#                 run(cur + 1, acum, seen.copy(), False)
+#             cur += arg
+#         else:
+#             if cmd == 'nop' and can_change:
+#                 run(cur + arg, acum, seen.copy(), False)
+#             cur += 1
+#     if cur == len(lines):
+#         print(acum)
+
+# seen = set()
+# run(0, 0, seen, True)
+
+# day 9 
+
+
+
 file = open('advent_input.txt')
-lines = [l.strip() for l in file.readlines()]
+nums = [int(l.strip()) for l in file.readlines()]
 
-def run(cur, acum, seen, can_change):
-    while cur not in seen and cur < len(lines): 
-        seen.add(cur)
-        cmd, arg = lines[cur][:3], int(lines[cur][4:])
-        if cmd == 'acc':
-            acum += arg
-        if cmd == 'jmp':
-            if can_change:
-                run(cur + 1, acum, seen.copy(), False)
-            cur += arg
-        else:
-            if cmd == 'nop' and can_change:
-                run(cur + arg, acum, seen.copy(), False)
-            cur += 1
-    if cur == len(lines):
-        print(acum)
+def two_sum(target, available):
+    return any([target - n in available for n in available])
 
-seen = set()
-run(0, 0, seen, True)
+preamble = 25
+cur = preamble
+available = set(nums[:preamble])
+
+while cur < len(nums):
+    if not two_sum(nums[cur], available):
+        target = nums[cur] 
+    available.remove(nums[cur - preamble])
+    available.add(nums[cur])
+    cur += 1
+
+print(target)
+
+# part 2
+start, end, total = 0, 0, 0
+
+while total != target: 
+    if total < target:
+        total += nums[end]
+        end += 1
+    else: 
+        total -= nums[start]
+        start += 1
+
+print(min(nums[start:end]) + max(nums[start:end]))
 
