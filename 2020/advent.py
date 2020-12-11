@@ -220,35 +220,116 @@
 
 
 
+# file = open('advent_input.txt')
+# nums = [int(l.strip()) for l in file.readlines()]
+
+# def two_sum(target, available):
+#     return any([target - n in available for n in available])
+
+# preamble = 25
+# cur = preamble
+# available = set(nums[:preamble])
+
+# while cur < len(nums):
+#     if not two_sum(nums[cur], available):
+#         target = nums[cur] 
+#     available.remove(nums[cur - preamble])
+#     available.add(nums[cur])
+#     cur += 1
+
+# print(target)
+
+# # part 2
+# start, end, total = 0, 0, 0
+
+# while total != target: 
+#     if total < target:
+#         total += nums[end]
+#         end += 1
+#     else: 
+#         total -= nums[start]
+#         start += 1
+
+# print(min(nums[start:end]) + max(nums[start:end]))
+
+# day 10 
+
+# file = open('advent_input.txt')
+# nums = [int(l.strip()) for l in file.readlines()]
+# target = max(nums)
+# adapters = set(nums)
+# adapters.add(0)
+# memo = {}
+
+# def walk(node):
+#     if node in memo:
+#         return memo[node]
+#     total = 0
+#     if node == target: 
+#         return 1
+#     if node+3 in adapters:
+#         total += walk(node+3)
+#     if node+2 in adapters:
+#         total += walk(node+2)
+#     if node+1 in adapters:
+#         total += walk(node+1)
+#     memo[node] = total
+#     return total 
+
+# print(walk(0))
+
+
+# day 11 
+
+# part 1 helper
+def num_adj_ppl(i, j):
+    occupied = 0
+    for x, y in [(1, 1), (0, 1), (1, 0), (-1, -1), (0, -1), (-1, 0), (-1, 1), (1, -1)]:
+        if i-x < 0 or j-y < 0:
+            continue
+        if i-x >= len(seats) or j-y >= len(seats[0]):
+            continue
+        occupied += int(seats[i-x][j-y] == '#')
+    return occupied
+
+# part 2 helper
+def num_adj_ppl2(i, j):
+    total = 0
+    for x, y in [(1, 1), (0, 1), (1, 0), (-1, -1), (0, -1), (-1, 0), (-1, 1), (1, -1)]:
+        total += run_line(i+x, j+y, x, y)
+    return total
+
+def run_line(i, j, stepi, stepj):
+    if i < 0 or j < 0:
+        return 0 
+    if i >= len(seats) or j >= len(seats[0]):
+        return 0 
+    if seats[i][j] == 'L':
+        return 0
+    if seats[i][j] == '#':
+        return 1
+    return run_line(i+stepi, j+stepj, stepi, stepj)
+
 file = open('advent_input.txt')
-nums = [int(l.strip()) for l in file.readlines()]
-
-def two_sum(target, available):
-    return any([target - n in available for n in available])
-
-preamble = 25
-cur = preamble
-available = set(nums[:preamble])
-
-while cur < len(nums):
-    if not two_sum(nums[cur], available):
-        target = nums[cur] 
-    available.remove(nums[cur - preamble])
-    available.add(nums[cur])
-    cur += 1
-
-print(target)
-
-# part 2
-start, end, total = 0, 0, 0
-
-while total != target: 
-    if total < target:
-        total += nums[end]
-        end += 1
-    else: 
-        total -= nums[start]
-        start += 1
-
-print(min(nums[start:end]) + max(nums[start:end]))
+seats = [list(l.strip()) for l in file.readlines()]
+changes = True
+while changes:
+    changes = False
+    new_seats = []
+    for i, row in enumerate(seats):
+        new_row =[]
+        for j, seat in enumerate(row):
+            new_seat = seat
+            if seat == '.':
+                new_seat = '.'
+            elif num_adj_ppl2(i,j) == 0:
+                new_seat = '#'
+            elif num_adj_ppl2(i,j) > 4:
+                new_seat = 'L'
+            if new_seat != seat:
+                    changes = True
+            new_row.append(new_seat)
+        new_seats.append(new_row)
+    seats = new_seats
+print(sum([row.count('#') for row in seats]))
 
