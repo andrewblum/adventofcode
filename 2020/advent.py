@@ -282,54 +282,94 @@
 # day 11 
 
 # part 1 helper
-def num_adj_ppl(i, j):
-    occupied = 0
-    for x, y in [(1, 1), (0, 1), (1, 0), (-1, -1), (0, -1), (-1, 0), (-1, 1), (1, -1)]:
-        if i-x < 0 or j-y < 0:
-            continue
-        if i-x >= len(seats) or j-y >= len(seats[0]):
-            continue
-        occupied += int(seats[i-x][j-y] == '#')
-    return occupied
+# def num_adj_ppl(i, j):
+#     occupied = 0
+#     for x, y in [(1, 1), (0, 1), (1, 0), (-1, -1), (0, -1), (-1, 0), (-1, 1), (1, -1)]:
+#         if i-x < 0 or j-y < 0:
+#             continue
+#         if i-x >= len(seats) or j-y >= len(seats[0]):
+#             continue
+#         occupied += int(seats[i-x][j-y] == '#')
+#     return occupied
 
 # part 2 helper
-def num_adj_ppl2(i, j):
-    total = 0
-    for x, y in [(1, 1), (0, 1), (1, 0), (-1, -1), (0, -1), (-1, 0), (-1, 1), (1, -1)]:
-        total += run_line(i+x, j+y, x, y)
-    return total
+# def num_adj_ppl2(i, j):
+#     total = 0
+#     for x, y in [(1, 1), (0, 1), (1, 0), (-1, -1), (0, -1), (-1, 0), (-1, 1), (1, -1)]:
+#         total += run_line(i+x, j+y, x, y)
+#     return total
 
-def run_line(i, j, stepi, stepj):
-    if i < 0 or j < 0:
-        return 0 
-    if i >= len(seats) or j >= len(seats[0]):
-        return 0 
-    if seats[i][j] == 'L':
-        return 0
-    if seats[i][j] == '#':
-        return 1
-    return run_line(i+stepi, j+stepj, stepi, stepj)
+# def run_line(i, j, stepi, stepj):
+#     if i < 0 or j < 0:
+#         return 0 
+#     if i >= len(seats) or j >= len(seats[0]):
+#         return 0 
+#     if seats[i][j] == 'L':
+#         return 0
+#     if seats[i][j] == '#':
+#         return 1
+#     return run_line(i+stepi, j+stepj, stepi, stepj)
 
+# file = open('advent_input.txt')
+# seats = [list(l.strip()) for l in file.readlines()]
+# changes = True
+# while changes:
+#     changes = False
+#     new_seats = []
+#     for i, row in enumerate(seats):
+#         new_row =[]
+#         for j, seat in enumerate(row):
+#             new_seat = seat
+#             if seat == '.':
+#                 new_seat = '.'
+#             elif num_adj_ppl2(i,j) == 0:
+#                 new_seat = '#'
+#             elif num_adj_ppl2(i,j) > 4:
+#                 new_seat = 'L'
+#             if new_seat != seat:
+#                     changes = True
+#             new_row.append(new_seat)
+#         new_seats.append(new_row)
+#     seats = new_seats
+# print(sum([row.count('#') for row in seats]))
+
+# day 12 
 file = open('advent_input.txt')
-seats = [list(l.strip()) for l in file.readlines()]
-changes = True
-while changes:
-    changes = False
-    new_seats = []
-    for i, row in enumerate(seats):
-        new_row =[]
-        for j, seat in enumerate(row):
-            new_seat = seat
-            if seat == '.':
-                new_seat = '.'
-            elif num_adj_ppl2(i,j) == 0:
-                new_seat = '#'
-            elif num_adj_ppl2(i,j) > 4:
-                new_seat = 'L'
-            if new_seat != seat:
-                    changes = True
-            new_row.append(new_seat)
-        new_seats.append(new_row)
-    seats = new_seats
-print(sum([row.count('#') for row in seats]))
+moves = [l.strip() for l in file.readlines()]
+direction = 90
+east, north = 10, 1
+ship_e, ship_n = 0,0
+# 0 is north 
+# 180 is south 
+# 270 is west
+# 90 is east
+for move in moves: 
+    action = move[0]
+    amt = int(move[1:])
+    if action == 'N':
+        north += amt
+    if action == 'S':
+        north -= amt
+    if action == 'E':
+        east += amt
+    if action == 'W':
+        east -= amt
+    if action == 'F':
+        ship_e +=  amt * east
+        ship_n +=  amt * north
+    if action == 'L':
+        if amt == 90:
+            east, north = north *-1, east
+        elif amt == 180:
+            east, north = east *-1 , north *-1
+        else: 
+            east, north = north , east *-1
+    if action == 'R':
+        if amt == 90:
+            east, north = north, east * -1
+        elif amt == 180:
+            east, north = east *-1 , north *-1
+        else: 
+            east, north = north* -1, east
 
+print(abs(ship_e) + abs(ship_n))
