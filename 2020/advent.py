@@ -334,42 +334,77 @@
 # print(sum([row.count('#') for row in seats]))
 
 # day 12 
+# file = open('advent_input.txt')
+# moves = [l.strip() for l in file.readlines()
+# east, north = 10, 1
+# ship_e, ship_n = 0,0
+# for move in moves: 
+#     action = move[0]
+#     amt = int(move[1:])
+#     if action == 'N':
+#         north += amt
+#     if action == 'S':
+#         north -= amt
+#     if action == 'E':
+#         east += amt
+#     if action == 'W':
+#         east -= amt
+#     if action == 'F':
+#         ship_e +=  amt * east
+#         ship_n +=  amt * north
+#     if action == 'L':
+#         if amt == 90:
+#             east, north = north *-1, east
+#         if amt == 270: 
+#             east, north = north, east *-1
+#     if action == 'R':
+#         if amt == 90:
+#             east, north = north, east * -1
+#         if amt == 270: 
+#             east, north = north* -1, east
+#     if move == 'L180' or move == 'R180':
+#         east, north = east *-1 , north *-1
+# print(abs(ship_e) + abs(ship_n))
+
+# day 13 
+import math
 file = open('advent_input.txt')
 moves = [l.strip() for l in file.readlines()]
-direction = 90
-east, north = 10, 1
-ship_e, ship_n = 0,0
-# 0 is north 
-# 180 is south 
-# 270 is west
-# 90 is east
-for move in moves: 
-    action = move[0]
-    amt = int(move[1:])
-    if action == 'N':
-        north += amt
-    if action == 'S':
-        north -= amt
-    if action == 'E':
-        east += amt
-    if action == 'W':
-        east -= amt
-    if action == 'F':
-        ship_e +=  amt * east
-        ship_n +=  amt * north
-    if action == 'L':
-        if amt == 90:
-            east, north = north *-1, east
-        elif amt == 180:
-            east, north = east *-1 , north *-1
-        else: 
-            east, north = north , east *-1
-    if action == 'R':
-        if amt == 90:
-            east, north = north, east * -1
-        elif amt == 180:
-            east, north = east *-1 , north *-1
-        else: 
-            east, north = north* -1, east
+buses = [(int(n), i) for i, n in enumerate(moves[1].split(',')) if n != 'x']
+mults = [x + y for x, y in buses]
+# print(math.lcm(mults))
+# print(buses)
+def check(t):
+    for n in buses:
+        if ((t+n[1]) % int(n[0])) != 0:
+            return False
+    return True 
 
-print(abs(ship_e) + abs(ship_n))
+# t = (971-48) * 1000000000000000
+# while not check(t):
+#     t += 971
+
+# print(t)
+
+
+# day 15
+
+from collections import deque, defaultdict
+occurances = defaultdict(lambda : deque(maxlen=2))
+nums = [2,0,1,7,4,14,18]
+for i, n in enumerate(nums[:-1]):
+    occurances[n].append(i+1)
+prev = nums[-1]
+for curr_index in range(len(nums), 2020):
+    occurances[prev].append(curr_index)
+    cur = 0
+    if prev in occurances and len(occurances[prev]) > 1: 
+        cur = occurances[prev][-1] - occurances[prev][-2]
+    prev = cur
+print(prev)
+
+
+
+
+
+
